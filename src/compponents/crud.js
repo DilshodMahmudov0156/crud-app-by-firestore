@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { database } from "../config";
-import { addDoc, collection, getDocs } from "firebase/firestore";
+import { addDoc, collection, getDocs, doc, deleteDoc } from "firebase/firestore";
 import { v4 as uuidv4 } from "uuid";
 
 function Crud({}) {
@@ -15,13 +15,18 @@ function Crud({}) {
         e.target.reset();
     }
 
+    const onDelete = async(id) => {
+        const deleteVal = doc(database, "myFirstFirestoreDatabase", id);
+        await deleteDoc(deleteVal);
+    }
+
     useEffect(() => {
         const getData = async() => {
             const dbVal = await getDocs(value);
             setVal(dbVal.docs.map(doc => ({...doc.data(), id: doc.id})));
         }
         getData();
-    },[])
+    },[val])
     return (
         <div className="container mt-5">
             <div className="row mt-5 justify-content-center">
@@ -57,7 +62,7 @@ function Crud({}) {
                                                 <button className="btn btn-secondary">Edit</button>
                                             </td>
                                             <td>
-                                                <button className="btn btn-dark">delete</button>
+                                                <button className="btn btn-dark" onClick={()=>{onDelete(item.id)}}>delete</button>
                                             </td>
                                         </tr>
                                     ))}
