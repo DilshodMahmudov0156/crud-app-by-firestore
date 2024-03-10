@@ -33,12 +33,12 @@ function Crud({}) {
                 <div className="col-xl-5 col-md-7">
                     <div className="card shadow-lg">
                         <div className="card-body">
-                            <form action="" onSubmit={(e) => {onSubmit(e)}}>
+
+                            <form onSubmit={(e) => {onSubmit(e)}}>
                                 <input type="text" className="form-control" onChange={(e) => {setName(e.target.value)}}/>
-                                <button className="btn btn-primary mt-2 w-100">
-                                    Submit data
-                                </button>
+                                <button className="btn btn-primary mt-2 w-100">Submit data</button>
                             </form>
+
                         </div>
                     </div>
                     <br/>
@@ -49,23 +49,30 @@ function Crud({}) {
                                 <tr>
                                     <th>#</th>
                                     <th>Name</th>
-                                    <th>Edit</th>
                                     <th>Delete</th>
                                 </tr>
                                 </thead>
                                 <tbody>
-                                {val.map((item, index)=> (
+
+
+                                {
+                                    val.map((item, index)=> (
                                         <tr>
                                             <td>{index + 1}</td>
                                             <td>{item.name}</td>
                                             <td>
-                                                <button className="btn btn-secondary">Edit</button>
-                                            </td>
-                                            <td>
-                                                <button className="btn btn-dark" onClick={()=>{onDelete(item.id)}}>delete</button>
+                                                <button
+                                                    className="btn btn-dark"
+                                                    onClick={()=>{onDelete(item.id)}}
+                                                >
+                                                    delete
+                                                </button>
                                             </td>
                                         </tr>
-                                    ))}
+                                    ))
+                                }
+
+
                                 </tbody>
                             </table>
                         </div>
