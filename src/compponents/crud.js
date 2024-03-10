@@ -10,14 +10,16 @@ function Crud({}) {
 
     const onSubmit = async (e) => {
         e.preventDefault();
-        await addDoc(value, {id: uuidv4(), name: name});
+        await addDoc(value, {id: uuidv4(), name: name}); e.target.reset();
         console.log(name);
-        e.target.reset();
+
     }
 
-    const onDelete = async(id) => {
-        const deleteVal = doc(database, "myFirstFirestoreDatabase", id);
-        await deleteDoc(deleteVal);
+    const onDelete = async(id, name) => {
+        if(window.confirm(`Do you want to delete it? ( ${name} )`)){
+            const deleteVal = doc(database, "myFirstFirestoreDatabase", id);
+            await deleteDoc(deleteVal);
+        }
     }
 
     useEffect(() => {
@@ -35,7 +37,7 @@ function Crud({}) {
                         <div className="card-body">
 
                             <form onSubmit={(e) => {onSubmit(e)}}>
-                                <input type="text" className="form-control" onChange={(e) => {setName(e.target.value)}}/>
+                                <input type="text" placeholder="  Enter name" className="form-control" onChange={(e) => {setName(e.target.value)}}/>
                                 <button className="btn btn-primary mt-2 w-100">Submit data</button>
                             </form>
 
@@ -62,8 +64,8 @@ function Crud({}) {
                                             <td>{item.name}</td>
                                             <td>
                                                 <button
-                                                    className="btn btn-dark"
-                                                    onClick={()=>{onDelete(item.id)}}
+                                                    className="btn btn-danger"
+                                                    onClick={()=>{onDelete(item.id, item.name)}}
                                                 >
                                                     delete
                                                 </button>
