@@ -70,6 +70,7 @@ function Crud({}) {
                                 <tr>
                                     <th>#</th>
                                     <th>Name</th>
+                                    <th>Edit</th>
                                     <th>Delete</th>
                                 </tr>
                                 </thead>
