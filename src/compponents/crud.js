@@ -1,17 +1,29 @@
 import React, { useState, useEffect } from 'react';
 import { database } from "../config";
-import { addDoc, collection, getDocs, doc, deleteDoc } from "firebase/firestore";
+import { addDoc, collection, getDocs, doc, deleteDoc, updateDoc } from "firebase/firestore";
 import { v4 as uuidv4 } from "uuid";
 
 function Crud({}) {
     const [ name, setName ] = useState(null);
+    const [show, setShow] = useState(false);
+    const [id, setId] = useState(null);
     const [ val, setVal ] = useState([]);
     const value = collection(database, "myFirstFirestoreDatabase");
 
     const onSubmit = async (e) => {
         e.preventDefault();
-        await addDoc(value, {id: uuidv4(), name: name}); e.target.reset();
-        console.log(name);
+        if(show){
+            setName("");
+            const updateData = doc(database, "myFirstFirestoreDatabase", id);
+            await updateDoc(updateData, {name: name});
+            setShow(false)
+
+        }else {
+            setName("");
+            await addDoc(value, {id: uuidv4(), name: name}); e.target.reset();
+            console.log(name);
+
+        }
 
     }
 
@@ -21,6 +33,13 @@ function Crud({}) {
             await deleteDoc(deleteVal);
         }
     }
+
+    const onEdit = (id, name) => {
+        setShow(true);
+        setName(name);
+        setId(id);
+    }
+
 
     useEffect(() => {
         const getData = async() => {
@@ -37,7 +56,7 @@ function Crud({}) {
                         <div className="card-body">
 
                             <form onSubmit={(e) => {onSubmit(e)}}>
-                                <input type="text" placeholder="  Enter name" className="form-control" onChange={(e) => {setName(e.target.value)}}/>
+                                <input type="text" placeholder="  Enter name" className="form-control" value={name} onChange={(e) => {setName(e.target.value)}}/>
                                 <button className="btn btn-primary mt-2 w-100">Submit data</button>
                             </form>
 
@@ -62,6 +81,11 @@ function Crud({}) {
                                         <tr>
                                             <td>{index + 1}</td>
                                             <td>{item.name}</td>
+                                            <td>
+                                                <button className="btn btn-warning" onClick={() => {onEdit(item.id, item.name)}}>
+                                                    edit
+                                                </button>
+                                            </td>
                                             <td>
                                                 <button
                                                     className="btn btn-danger"
